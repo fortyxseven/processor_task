@@ -11,10 +11,10 @@ jobs:
     
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # UPDATED to v4 to fix Node warning
 
       - name: Setup Environment
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # UPDATED to v5 to fix Node warning
         with:
           python-version: '3.9'
           
