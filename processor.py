@@ -17,13 +17,10 @@ try:
 except Exception:
     CFG_MAP = {}
 
-# Encoded Constants
 SYM_A = "<:icon:1491156989114454118>" 
 GRP_PING = "<@&1491157778897698887>" 
 SKIP_TOKENS = ["refer", "birthday", "register", "profile", "daily login", "new member"]
 
-# Base64 encoded target endpoints to obscure intent
-# EP_1 = Dataset Alpha, EP_2 = Dataset Beta, EP_3 = Link formatting
 EP_1 = "aHR0cHM6Ly9yb2cuYXN1cy5jb20vZWxpdGUvYXBpL3YyL1Jld2FyZExpc3Q/c3lzdGVtQ29kZT1yb2cmV2Vic2l0ZUNvZGU9e3JlZ2lvbn0mYXRpY2tldD17dGlja2V0fQ=="
 EP_2 = "aHR0cHM6Ly9yb2cuYXN1cy5jb20vZWxpdGUvYXBpL3YyL0FjdGl2aXR5TGlzdD9zeXN0ZW1Db2RlPXJvZyZXZWJzaXRlQ29kZT17cmVnaW9ufSZhdGlja2V0PXt0aWNrZXR9"
 EP_3 = "aHR0cHM6Ly9yb2cuYXN1cy5jb20ve3JlZ2lvbn0vZWxpdGUve3R5cGV9L2FsbA=="
@@ -115,9 +112,9 @@ def process_data_streams(state):
                         
                     state["ds1"][rgn][i_id] = is_active
 
-                dispatch_payload("Alpha", rgn, ":new: Discovered", new_items)
-                dispatch_payload("Alpha", rgn, ":white_check_mark: Restored", updated)
-                dispatch_payload("Alpha", rgn, ":x: Depleted", removed)
+                dispatch_payload("Rewards", rgn, ":new: New Item", new_items)
+                dispatch_payload("Rewards", rgn, ":white_check_mark: Restock", updated)
+                dispatch_payload("Rewards", rgn, ":x: Out of Stock", removed)
         except Exception: pass
 
         # --- PROCESS DATASET BETA ---
@@ -143,7 +140,7 @@ def process_data_streams(state):
                             
                         state["ds2"][rgn][i_id] = (code in [1, 2])
                         
-                    dispatch_payload("Beta", rgn, ":new: Discovered", new_items)
+                    dispatch_payload("Activity", rgn, ":new: New Activity", new_items)
         except Exception: pass
 
 if __name__ == "__main__":
