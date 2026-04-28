@@ -87,7 +87,7 @@ def process_data_streams(state):
             if res.status_code == 200:
                 data = res.json()
                 if str(data.get('Status', '')) != "0":
-                    dispatch_sys_err(rgn, f"Stream Error: `{data.get('Message')}`")
+                    dispatch_sys_err(rgn, f"Alpha Node Error: `{data.get('Message', 'Unknown Auth Error')}`")
                     continue
 
                 items = data.get('Result', {}).get('Obj', [])
@@ -112,36 +112,45 @@ def process_data_streams(state):
                         
                     state["ds1"][rgn][i_id] = is_active
 
-                dispatch_payload("Rewards", rgn, ":new: New Item", new_items)
-                dispatch_payload("Rewards", rgn, ":white_check_mark: Restock", updated)
-                dispatch_payload("Rewards", rgn, ":x: Out of Stock", removed)
-        except Exception: pass
+                dispatch_payload("Alpha", rgn, ":new: Discovered", new_items)
+                dispatch_payload("Alpha", rgn, ":white_check_mark: Restored", updated)
+                dispatch_payload("Alpha", rgn, ":x: Depleted", removed)
+            else:
+                dispatch_sys_err(rgn, f"Alpha HTTP Block: `{res.status_code}`")
+        except Exception as e: 
+            dispatch_sys_err(rgn, f"Alpha Connection Failure: `{str(e)}`")
 
         # --- PROCESS DATASET BETA ---
         try:
             res = requests.get(_dec(EP_2).format(region=rgn, ticket=tkt), headers=headers)
             if res.status_code == 200:
                 data = res.json()
-                if str(data.get('Status', '')) == "0":
-                    items = data.get('Result', {}).get('Obj', [])
-                    new_items = []
-                    if rgn not in state["ds2"]: state["ds2"][rgn] = {}
+                if str(data.get('Status', '')) != "0":
+                    dispatch_sys_err(rgn, f"Beta Node Error: `{data.get('Message', 'Unknown Auth Error')}`")
+                    continue
+
+                items = data.get('Result', {}).get('Obj', [])
+                new_items = []
+                if rgn not in state["ds2"]: state["ds2"][rgn] = {}
+                
+                for item in items:
+                    i_id = str(item['ActivityId'])
+                    n = format_string(item['ActivityName'])
+                    v = item['Point']
+                    code = item['Status']
                     
-                    for item in items:
-                        i_id = str(item['ActivityId'])
-                        n = format_string(item['ActivityName'])
-                        v = item['Point']
-                        code = item['Status']
+                    if any(x in n.lower() for x in SKIP_TOKENS): continue
+                    
+                    if i_id not in state["ds2"][rgn] and code in [1, 2]:
+                        new_items.append({"n": n, "v": v})
                         
-                        if any(x in n.lower() for x in SKIP_TOKENS): continue
-                        
-                        if i_id not in state["ds2"][rgn] and code in [1, 2]:
-                            new_items.append({"n": n, "v": v})
-                            
-                        state["ds2"][rgn][i_id] = (code in [1, 2])
-                        
-                    dispatch_payload("Activity", rgn, ":new: New Activity", new_items)
-        except Exception: pass
+                    state["ds2"][rgn][i_id] = (code in [1, 2])
+                    
+                dispatch_payload("Beta", rgn, ":new: Discovered", new_items)
+            else:
+                dispatch_sys_err(rgn, f"Beta HTTP Block: `{res.status_code}`")
+        except Exception as e: 
+            dispatch_sys_err(rgn, f"Beta Connection Failure: `{str(e)}`")
 
 if __name__ == "__main__":
     st = load_cache()
