@@ -66,12 +66,12 @@
             "5452": false,
             "5451": true,
             "5422": true,
-            "5402": true,
+            "5402": false,
             "5345": true,
             "5244": false,
             "5242": true,
             "5243": true,
-            "5237": true,
+            "5237": false,
             "5185": true,
             "5160": false,
             "4967": true,
@@ -99,7 +99,7 @@
             "5352": true,
             "5569": false,
             "4879": true,
-            "5543": true
+            "5543": false
         }
     },
     "ds2": {
