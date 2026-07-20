@@ -61,10 +61,11 @@
             "5636": true,
             "5639": false,
             "5695": true,
-            "5637": true
+            "5637": true,
+            "5640": false
         },
         "pl": {
-            "5484": false,
+            "5484": true,
             "5453": true,
             "5452": false,
             "5451": true,
@@ -72,16 +73,16 @@
             "5402": false,
             "5345": true,
             "5244": false,
-            "5242": false,
-            "5243": false,
-            "5237": false,
+            "5242": true,
+            "5243": true,
+            "5237": true,
             "5185": true,
             "5160": false,
             "4967": true,
             "4968": true,
             "4969": true,
             "4970": true,
-            "4962": false,
+            "4962": true,
             "1354": true,
             "1355": true,
             "1353": true,
@@ -102,7 +103,7 @@
             "5352": true,
             "5569": false,
             "4879": false,
-            "5543": false,
+            "5543": true,
             "5689": false
         }
     },
